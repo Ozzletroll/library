@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+
 
 app = Flask(__name__)
+db = sqlite3.connect("books-collection.db")
 
 all_books = []
 

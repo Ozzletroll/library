@@ -17,6 +17,9 @@ class Book(db.Model):
     author = db.Column(db.String(250), unique=False, nullable=False)
     rating = db.Column(db.Float, unique=False, nullable=False)
 
+    def __repr__(self):
+        return f'<Book {self.title}>'
+
 
 # Create the tables
 with app.app_context():
@@ -35,12 +38,13 @@ def home():
 def add():
 
     if request.method == "POST":
-        entry = {
-            "title": request.form["title"],
-            "author": request.form["author"],
-            "rating": request.form["rating"],
-            }
-        all_books.append(entry)
+        book = Book(
+                title=request.form["title"],
+                author=request.form["author"],
+                rating=request.form["rating"]
+                )
+        db.session.add(book)
+        db.session.commit()
 
         return redirect(url_for("home"))
 
@@ -48,5 +52,5 @@ def add():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
 

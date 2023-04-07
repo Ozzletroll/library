@@ -52,10 +52,9 @@ def add():
     return render_template("add.html")
 
 
-@app.route("/edit/<int:id_number>", methods=["GET", "POST"])
-def edit(id_number):
-
-    print(id_number)
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    id_number = request.args.get("id_number")
 
     if request.method == "POST":
         # Get the new rating

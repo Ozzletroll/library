@@ -1,9 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 
-
+# Create Flask app
 app = Flask(__name__)
-db = sqlite3.connect("books-collection.db")
+
+# Configure database with SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///new-books-collection.db'
+db = SQLAlchemy(app)
+
+
+# Define models
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), unique=True, nullable=False)
+    author = db.Column(db.String(250), unique=False, nullable=False)
+    rating = db.Column(db.Float, unique=False, nullable=False)
+
+
+# Create the tables
+with app.app_context():
+    db.create_all()
+
 
 all_books = []
 
@@ -23,6 +41,7 @@ def add():
             "rating": request.form["rating"],
             }
         all_books.append(entry)
+
         return redirect(url_for("home"))
 
     return render_template("add.html")
